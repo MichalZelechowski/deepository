@@ -16,6 +16,8 @@ In order to train model on local machine, the following information has to be pr
  
 In order to train model locally:
 ```java
+import org.mz.deepository.workbench.LocalExperiment;
+
 LocalExperiment experiment = new LocalExperiment(
                 "Rnn",
                 "1.2",
