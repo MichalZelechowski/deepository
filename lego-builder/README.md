@@ -41,19 +41,27 @@ Every building consists of outlines and every outline cosists of bricks. Brick h
 Following hints from more [experienced](https://blog.slavv.com/37-reasons-why-your-neural-network-is-not-working-4020854bd607)
 I decided to start trianing with a very small set of 10 buildings and very small network. I was able to train this network quickly, but also overfitted to this small input set. Such network was able to only generate exact same buildings that it has
 seen before.
+
 > TODO insert loss chart, with epochs information, and % of generated building
 
 ## Increasing train set
 
 The next train set contained 500 buildings. It took considerably longer time to find suitable network configuration and train it to sensible loss value. 
+
 > TODO insert loss chart here
+
 Network generates correct building almost every time asked, but only small fraction is unique.
+
 > TODO fraction put here
+
 > TODO tell about configuration tried and problems with vanishing & exploding gradients, tbptt length, variations with number of layers, batch size etc.
 
 ## Final train set
 
 The final train set size was 25,000 buildings. Due to the limited computation capacity only limited number of epochs was trained.
+
 > TODO chart again
+
 Loss value converged quite soon, at the high value, however network started exposing interesting capabilities. It was generating correct building in 50% of the cases and almost all of them had never been seen by the model.
+
 > TODO numbers, numbers, numbers!
