@@ -44,21 +44,59 @@ Network consisted of set of [LSTM layers](https://www.coursera.org/lecture/nlp-s
 
 ## Training model
 
-As one building was encoded on average to 100 values then 1,000 of buildings encoded to 100,000 values. If compared to sentences in classical [sampling of novel sequences problem](https://www.coursera.org/lecture/nlp-sequence-models/sampling-novel-sequences-MACos), one could claim that setting 1,000 buildings as an input is comparable to giving 55 page novel as an input.
+As one building was encoded on average to 100 values then 1,000 of buildings encoded to 100,000 values. If compared to sentences in classical [sampling of novel sequences problem](https://www.coursera.org/lecture/nlp-sequence-models/sampling-novel-sequences-MACos), setting up 1,000 buildings could be compared to 55 page novel.
+
+Following [hints regarding size](https://towardsdatascience.com/rnn-training-tips-and-tricks-2bf687e67527), I adapted size of the layers to training set size.
+
+> TODO tell about environment conditions, hardware, memory consumption etc.
  
 ### Starting with the small train set
 
 In order to avoid [common RNN pitfalls](https://blog.slavv.com/37-reasons-why-your-neural-network-is-not-working-4020854bd607)
-I decided to start trianing with a very small set of 10 buildings and very small network. I was able to train this network quickly, but also overfitted to this small input set. Such network was able to only generate exact same buildings that it has
+I decided to start training with a very small set of 10 buildings and very small network. I was able to train this network quickly, but also overfitted to this small input set. Such network was able to only generate exact same buildings that it has
 seen before.
 
 > TODO insert loss chart, with epochs information, and % of generated building
 
 ### Increasing train set
 
-The next train set contained 500 buildings. It took considerably longer time to find suitable network configuration and train it to sensible loss value. 
+The next train set contained 500 buildings. It took considerably longer time to find suitable network configuration and train it to sensible loss value.
 
-> TODO insert loss chart here
+The configuration was about 2 LSTM layers followed by RNN output layer with softmax activation. 
+
+```java
+MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+                .cacheMode(CacheMode.DEVICE)
+                .weightInit(WeightInit.XAVIER)
+                .updater(new Adam(0.0005))
+                .list()
+                .layer(0, new LSTM.Builder().nIn(27).nOut(128)
+                        .activation(Activation.TANH).build())
+                .layer(1, new LSTM.Builder().nIn(128).nOut(128)
+                        .activation(Activation.TANH).build())
+                .layer(2, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT).activation(Activation.SOFTMAX)
+                        .nIn(128).nOut(27)
+                        .build())
+                .backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(220).tBPTTBackwardLength(220)
+                .build();
+```
+
+There were nearly 220,000 network parameters and the training set was about 100,000 characters, so it felt like a sufficient number to conduct the training. 
+
+> TODO loss chart here
+
+Although model score had nice slope, there were some peeks that could mean:
+ * too big learning rate
+ * instability in computation causing exploding gradients
+ * loss function having very sharp edges
+ 
+ > TODO update parameters chart here
+ 
+High variation in update of the parameters could mean instabilities, but zooming into the very last epochs gave strong suspicion that from time to time updater steps out from the local minima due to the not well adapted learning rate and falls back to it after some iterations.
+
+> TODO zoomed loss chart + update of parameters
+
+Reducing learning rate though resulted in convergence happening too soon.
 
 Network generates correct building almost every time asked, but only small fraction is unique.
 
