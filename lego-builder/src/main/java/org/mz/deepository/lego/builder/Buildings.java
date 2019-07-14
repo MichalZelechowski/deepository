@@ -54,11 +54,13 @@ class Buildings {
     }
 
     public static void main(String args[]) throws IOException {
-        String targetPath = args[0];
+        final String targetPath = args[0];
+        final int seed = Integer.parseInt(args[2]);
+        final int amount = Integer.parseInt(args[1]);
 
         Buildings buildings = new Buildings(targetPath);
 
-        buildings.store(new BuildingGenerator(Integer.parseInt(args[2])).generate(Integer.parseInt(args[1])));
+        buildings.store(new BuildingGenerator(seed).generate(amount));
     }
 
     private static class SerializedObjectsIterator implements Iterator<Building> {
