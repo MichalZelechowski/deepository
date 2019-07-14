@@ -146,10 +146,13 @@ MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                         .activation(Activation.TANH).build())
                 .layer(1, new LSTM.Builder().nIn(512).nOut(256)
                         .activation(Activation.TANH).build())
-                .layer(2, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT).activation(Activation.SOFTMAX)
+                .layer(2, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
+                        .activation(Activation.SOFTMAX)
                         .nIn(256).nOut(27)
                         .build())
-                .backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(220).tBPTTBackwardLength(220)
+                .backpropType(BackpropType.TruncatedBPTT)
+                        .tBPTTForwardLength(220)
+                        .tBPTTBackwardLength(220)
                 .build();
 ```
 
@@ -158,5 +161,7 @@ MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
 Loss value converged quite soon, at the fairly high value. Also parameter update ratios was not optimal, however network started exposing interesting capabilities. It was generating correct building in 70% of the cases and only 2% were seen previously by the model.
 
 ## Summary & conclusions
+
+![output.png](img/output.png)
 
 It was interesting to see that network not only learned to create outlines of correct shape, but also knows how to create another levels of building of the same shape.
