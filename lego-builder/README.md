@@ -8,7 +8,8 @@ a model that, when asked, generates a building, that matches following condition
  * all outlines are of the same shape, likely rectangular
  * outlines are stacked on each other
  * was not seen previously by the model
-> TODO add picture of the building here
+ 
+ ![sample_building](img/sample_building.png)
 
 > Note: as the conditions are fabricated, it's easy to solve the problem with random generator and set of building rules, however 
 the intention was to learn RNN architecture and deep networks in more details, given some simple problem
