@@ -77,7 +77,7 @@ I was quite unsure if it makes sense to train deep netoworks with my desktop mac
 
 In contrary when I used [GeForce GTX-760 2GB](https://www.videocardbenchmark.net/gpu.php?gpu=geforce+gtx+760&id=2561) with [cuDNN](https://developer.nvidia.com/cudnn) computation was boosted ~100 times. The downside though was that networks with more than 20 million parameters didn't fit into card memory.
 
-~[system](img/system.png)
+![system](img/system.png)
  
 ### Starting with the small train set
 
@@ -103,10 +103,13 @@ MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                         .activation(Activation.TANH).build())
                 .layer(1, new LSTM.Builder().nIn(128).nOut(128)
                         .activation(Activation.TANH).build())
-                .layer(2, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT).activation(Activation.SOFTMAX)
+                .layer(2, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
+                        .activation(Activation.SOFTMAX)
                         .nIn(128).nOut(27)
                         .build())
-                .backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(220).tBPTTBackwardLength(220)
+                .backpropType(BackpropType.TruncatedBPTT)
+                        .tBPTTForwardLength(220)
+                        .tBPTTBackwardLength(220)
                 .build();
 ```
 
