@@ -71,7 +71,13 @@ As one building was encoded on average to 100 values then 1,000 of buildings enc
 
 Following [hints regarding size](https://towardsdatascience.com/rnn-training-tips-and-tricks-2bf687e67527), I adapted size of the layers to training set size.
 
-> TODO tell about environment conditions, hardware, memory consumption etc.
+### Hardware note
+
+I was quite unsure if it makes sense to train deep netoworks with my desktop machine. Firstly I tried training with my CPU which is [AMD FX-8500](https://cpubenchmark.net/cpu.php?cpu=AMD+FX-8350+Eight-Core&id=1780) and 16GB RAM. I was able to fit all data into memory even for the biggest network configurations (~100 million parameters). Using CPU turned out to be very slow though - iteration of 64 buildings in batch took ~15 of seconds. 
+
+In contrary when I used [GeForce GTX-760 2GB](https://www.videocardbenchmark.net/gpu.php?gpu=geforce+gtx+760&id=2561) with [cuDNN](https://developer.nvidia.com/cudnn) computation was boosted ~100 times. The downside though was that networks with more than 20 million parameters didn't fit into card memory.
+
+~[system](img/system.png)
  
 ### Starting with the small train set
 
