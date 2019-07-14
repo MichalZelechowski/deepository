@@ -83,18 +83,18 @@ MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
 
 There were nearly 220,000 network parameters and the training set was about 100,000 characters, so it felt like a sufficient number to conduct the training. 
 
-> TODO loss chart here
+![500_score](img/500_score.png)
 
 Although model score had nice slope, there were some peeks that could mean:
  * too big learning rate
  * instability in computation causing exploding gradients
  * loss function having very sharp edges
  
- > TODO update parameters chart here
+ ![500_updates](img/500_update_ratios.png)
  
 High variation in update of the parameters could mean instabilities, but zooming into the very last epochs gave strong suspicion that from time to time updater steps out from the local minima due to the not well adapted learning rate and falls back to it after some iterations.
 
-> TODO zoomed loss chart + update of parameters
+![500_score_finish](img/500_score_finish.png) | ![500_updates_finish](img/500_update_ratios_finish.png)
 
 Reducing learning rate though resulted in convergence happening too soon.
 
@@ -125,13 +125,11 @@ MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .build();
 ```
 
-![25000_score](lego-builder/img/25000_score.png) | ![25000_updates](lego-builder/img/25000_updates.png)
+![25000_score](img/25000_score.png) | ![25000_updates](img/25000_updates.png)
 
-Loss value converged quite soon, at the high value, however network started exposing interesting capabilities. It was generating correct building in 50% of the cases and almost all of them had never been seen by the model.
+Loss value converged quite soon, at the fairly high value. Also parameter update ratios was not optimal, however network started exposing interesting capabilities. It was generating correct building in 50% of the cases and almost all of them had never been seen by the model.
 
 > TODO numbers, numbers, numbers!
-
-> TODO conclusion - is it about a loss?
 
 ## Summary & conclusions
 
