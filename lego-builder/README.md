@@ -41,7 +41,29 @@ I picked [RNN](https://www.coursera.org/lecture/nlp-sequence-models/recurrent-ne
 
 Network consisted of set of [LSTM layers](https://www.coursera.org/lecture/nlp-sequence-models/long-short-term-memory-lstm-KXoay). I followed [RNN hints](https://towardsdatascience.com/rnn-training-tips-and-tricks-2bf687e67527) and was adapting size of the network to the input train sets sizes.
 
-> TODO differen way of iterating over data (paddingvs no padding, etc.)
+At first, I treated one building as one input record. I had to find the building that requires the biggest number of bricks. I padded all building to this number, filling the paddings with `-1`. This naive approach didn't turn into good results. `-1`s have dominated the input heavily, with almost 60% provided values. As a result, output buildings were often of small height as `-1` was frequently picked.
+
+```
+113, 106, 110, ..., -1, -1, -1, -1, -1, -1, -1, [...], -1
+```
+
+In the second approach, encoded buildings where glued one after another. This resulted in better stability of training and better loss drop. Still, network struggled to construct buildings correctly and these were not at the highest quality.
+
+```
+113, 106, 110, ..., 104, 109, 1, 112, 107, ..., 106, 1, 104, 106
+```
+
+My conclusion was that since the input is still aligned to maximum number of 220 bricks, input record splits the first and last building in two parts. That gave network wrong information how the sequences of bricks should follow one after another.
+
+As the final approach, I modified the second approach by adding padding when I knew that I cannot input the building without splitting it into 2 parts. This way, the record always contained complete, correctly formed building and there was no domination of single values.
+
+```
+113, 106, 110, ..., 104, 109, 1, 112, 107, ..., 106, 1, -1, -1
+```
+
+This form of data gave the best results in terms of frequency of correctly constructed buildings.
+
+In order to feed encoded building into the network, I used one-hot encoding. 
 
 ## Training model
 
