@@ -58,7 +58,7 @@ seen before.
 
 > TODO insert loss chart, with epochs information, and % of generated building
 
-### Increasing train set
+### Increasing train set size
 
 The next train set contained 500 buildings. It took considerably longer time to find suitable network configuration and train it to sensible loss value.
 
@@ -106,9 +106,26 @@ Network generates correct building almost every time asked, but only small fract
 
 ### Final train set
 
-The final train set size was 25,000 buildings. Due to the limited computation capacity only limited number of epochs was trained.
+The final train set size was 25,000 buildings. The network configuration was as following:
 
-> TODO chart again
+```java
+MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+                .cacheMode(CacheMode.DEVICE)
+                .weightInit(WeightInit.XAVIER)
+                .updater(new Adam(0.0005))
+                .list()
+                .layer(0, new LSTM.Builder().nIn(27).nOut(512)
+                        .activation(Activation.TANH).build())
+                .layer(1, new LSTM.Builder().nIn(512).nOut(256)
+                        .activation(Activation.TANH).build())
+                .layer(2, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT).activation(Activation.SOFTMAX)
+                        .nIn(256).nOut(27)
+                        .build())
+                .backpropType(BackpropType.TruncatedBPTT).tBPTTForwardLength(220).tBPTTBackwardLength(220)
+                .build();
+```
+
+![25000_score](lego-builder/img/25000_score.png) | ![25000_updates](lego-builder/img/25000_updates.png)
 
 Loss value converged quite soon, at the high value, however network started exposing interesting capabilities. It was generating correct building in 50% of the cases and almost all of them had never been seen by the model.
 
