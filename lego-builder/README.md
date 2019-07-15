@@ -63,7 +63,9 @@ As the final approach, I modified the second approach by adding padding when I k
 
 This form of data gave the best results in terms of frequency of correctly constructed buildings.
 
-In order to feed encoded building into the network, I used one-hot encoding. 
+In order to feed encoded building into the network, I used one-hot encoding.
+
+> When trying different configurations I experimented with different TBPTT values, however giving any values lower than maximum length of the input led to suboptimal results.
 
 ## Training model
 
