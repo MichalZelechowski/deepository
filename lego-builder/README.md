@@ -85,7 +85,7 @@ In order to avoid [common RNN pitfalls](https://blog.slavv.com/37-reasons-why-yo
 I decided to start training with a very small set of 10 buildings and very small network. I was able to train this network quickly, but also overfitted to this small input set. Such network was able to only generate exact same buildings that it has
 seen before.
 
-> TODO insert loss chart, with epochs information, and % of generated building
+Since this model overfit to such small input data the next step was to use more data, scaling network configuration accordingly. 
 
 ### Increasing train set size
 
@@ -165,3 +165,16 @@ Loss value converged quite soon, at the fairly high value. Also parameter update
 ![output.png](img/output.png)
 
 It was interesting to see that network not only learned to create outlines of correct shape, but also knows how to create another levels of building of the same shape.
+
+I learned the following during this exercise:
+* experimenting with different network configurations requires discipline, as it's easy to loose track of which approach was already tried
+* good toolbox helps conducting experiments and tracking the results
+* I could have saved so match time with proper hyperparameter tuning
+* GPU training is far more time effective to CPU training
+* more GPU memory is a must when training bigger models, something worth considering when matching hardware to solution
+* RNN architectures are computationally intensive
+* adjusting data format is a key factor, when stucked it's worth spending more time on data wrangling instead of modelling
+* looking into network internals during training gives insight into the loss not dropping or fluctuating violently
+* starting small is a good idea
+* if loss converges, improvement exponentially drops with time - I wasn't patient enought to verify if I reached saddle point, but could be worth trying
+* keeping end goal in mind is important, loss is not everything to take into account
