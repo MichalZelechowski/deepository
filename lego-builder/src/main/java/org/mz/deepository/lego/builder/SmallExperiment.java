@@ -3,13 +3,13 @@ package org.mz.deepository.lego.builder;
 import com.google.inject.util.Providers;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.mz.deepository.lego.builder.configuration.EmbeddedRnn;
+import org.mz.deepository.lego.builder.configuration.ConfigurableBasicRnn;
 import org.mz.deepository.workbench.ExperimentException;
 import org.mz.deepository.workbench.GradientListener;
 import org.mz.deepository.workbench.LocalExperiment;
 import org.mz.deepository.workbench.WeightListener;
 
-public class BasicExperiment {
+public class SmallExperiment {
 
     public static void main(String[] args) throws IOException, ExperimentException {
         String trainSet = args[0];
@@ -25,11 +25,11 @@ public class BasicExperiment {
         System.out.println("Train data size: " + trainData.length);
         System.out.println("Train data total size: " + trainData.length * 200);
         System.out.println("Batch train data size: " + 64 * 200);
-        BrickIterator trainDataIterator = new EmbeddingBrickIterator(trainData, 64);
-        BrickIterator testDataIterator = new EmbeddingBrickIterator(testData, 64);
+        BrickIterator trainDataIterator = new BrickIterator(trainData, 64, new ContinuousWithPaddingDataInitializer());
+        BrickIterator testDataIterator = new BrickIterator(testData, 64, new ContinuousWithPaddingDataInitializer());
 
-        LocalExperiment experiment = new LocalExperiment("EmbeddedRnn", "1.2",
-                new EmbeddedRnn(trainDataIterator.inputColumns(), trainDataIterator.totalOutcomes(), 32, 512, 256),
+        LocalExperiment experiment = new LocalExperiment("SmallRnn", "1.1",
+                new ConfigurableBasicRnn(trainDataIterator.inputColumns(), trainDataIterator.totalOutcomes(), 8, 8),
                 Providers.of(trainDataIterator), Providers.of(testDataIterator),
                 experimentsDir,
                 new BuildingPredictorListener(10, 100, trainDataIterator, generatedBuildingsDir),
