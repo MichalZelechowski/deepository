@@ -8,6 +8,7 @@
     <modules>
         <module>workbench</module>
         <module>lego-builder</module>
+        <module>lego-color-transfer</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
