@@ -1,7 +1,11 @@
+# bricks color transfer
 
-1. Load pretrained VGG16 model from network and cache locally
-1. Load content image, mix it with random noise (combination)
-1. For every conv layer compute gram matrix (flat version of activations multiplicated by transposition <=> flat_activation^2?) for style
+This project is a [clone](https://github.com/deeplearning4j/dl4j-examples/blob/master/dl4j-examples/src/main/java/org/deeplearning4j/examples/styletransfer/NeuralStyleTransfer.java)
+
+
+1. load pretrained VGG16 model from network and cache locally
+1. load content image, mix it with random noise (combination)
+1. for every conv layer compute gram matrix (flat version of activations multiplicated by transposition <=> flat_activation^2?) for style
 1. feedforward combination
 1. backpropagate style
     * derivative loss style in layer - style gram matrix with activations on combination
