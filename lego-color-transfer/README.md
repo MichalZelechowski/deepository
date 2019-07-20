@@ -12,9 +12,10 @@ The following is used for content:
 
 I was wondering if black & grey castle will receive colors. I ran 1,000 iterations. Most of the impact happens before 300th interation.
 
-![0](src/main/resources/styletransfer/out/iteration_lego000.jpg) 0 | ![25](src/main/resources/styletransfer/out/iteration_lego025.jpg) 25 | ![50](src/main/resources/styletransfer/out/iteration_lego050.jpg) 50 |
-![100](src/main/resources/styletransfer/out/iteration_lego100.jpg) 100 | ![200](src/main/resources/styletransfer/out/iteration_lego200.jpg) 200 | ![300](src/main/resources/styletransfer/out/iteration_lego300.jpg) 300 |
 
+![0](src/main/resources/styletransfer/out/iteration_lego000.jpg) 0  ![25](src/main/resources/styletransfer/out/iteration_lego025.jpg) 25  ![50](src/main/resources/styletransfer/out/iteration_lego050.jpg) 50 
+![100](src/main/resources/styletransfer/out/iteration_lego100.jpg) 100  ![200](src/main/resources/styletransfer/out/iteration_lego200.jpg) 200  ![300](src/main/resources/styletransfer/out/iteration_lego300.jpg) 300 
+-
 The overal algorithm is as follows:
 1. load pretrained VGG16 model from network and cache locally
 1. load content image, mix it with random noise - that's called combination
