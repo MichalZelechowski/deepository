@@ -17,3 +17,7 @@ constructed buildings. I expected to train model that is capable of construction
 
 It's just a clone of deeplearning4j example of neural style transfer between 2 images. The content is rendered castle and the style is building generated
 by the network trained in `lego-builder` project.
+
+# lego-mnist
+
+Simple bricks classifier (in progress).
