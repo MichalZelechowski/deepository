@@ -3,19 +3,17 @@
 This project is a [clone](https://github.com/deeplearning4j/dl4j-examples/blob/master/dl4j-examples/src/main/java/org/deeplearning4j/examples/styletransfer/NeuralStyleTransfer.java)
 
 The following image is used for style:
+
 ![style](src/main/resources/styletransfer/bricks_style.jpg)
 
 The following is used for content:
+
 ![content](src/main/resources/styletransfer/castle.jpg)
 
-I ran 1,000 iterations. Most of the impact happens before 300th interation.
+I was wondering if black & grey castle will receive colors. I ran 1,000 iterations. Most of the impact happens before 300th interation.
 
-![0](src/main/resources/styletransfer/out/iteration_lego000.jpg)
-![25](src/main/resources/styletransfer/out/iteration_lego025.jpg)
-![50](src/main/resources/styletransfer/out/iteration_lego050.jpg)
-![100](src/main/resources/styletransfer/out/iteration_lego100.jpg)
-![200](src/main/resources/styletransfer/out/iteration_lego200.jpg)
-![300](src/main/resources/styletransfer/out/iteration_lego300.jpg)
+![0](src/main/resources/styletransfer/out/iteration_lego000.jpg) 0 | ![25](src/main/resources/styletransfer/out/iteration_lego025.jpg) 25 | ![50](src/main/resources/styletransfer/out/iteration_lego050.jpg) 50 |
+![100](src/main/resources/styletransfer/out/iteration_lego100.jpg) 100 | ![200](src/main/resources/styletransfer/out/iteration_lego200.jpg) 200 | ![300](src/main/resources/styletransfer/out/iteration_lego300.jpg) 300 |
 
 The overal algorithm is as follows:
 1. load pretrained VGG16 model from network and cache locally
