@@ -8,4 +8,16 @@
     </parent>
     <artifactId>lego-mnist</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>workbench</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
