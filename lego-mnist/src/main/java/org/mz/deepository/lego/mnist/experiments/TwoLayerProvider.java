@@ -1,7 +1,6 @@
 package org.mz.deepository.lego.mnist.experiments;
 
 import javax.inject.Provider;
-import org.deeplearning4j.nn.conf.CacheMode;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -9,30 +8,33 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.mz.deepository.workbench.GlobalRandom;
 import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.learning.config.Nesterovs;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.nd4j.linalg.learning.config.Adam;
+import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
-public class SingleLayerProvider implements Provider<MultiLayerConfiguration> {
+public class TwoLayerProvider implements Provider<MultiLayerConfiguration> {
 
     @Override
     public MultiLayerConfiguration get() {
+        float rate = 0.01f;
         MultiLayerConfiguration configuration = new NeuralNetConfiguration.Builder()
                 .seed(GlobalRandom.getSeed())
-                .cacheMode(CacheMode.DEVICE)
-                .updater(new Nesterovs(0.006, 0.9))
-                .l2(1e-4)
+                .activation(Activation.RELU)
+                .weightInit(WeightInit.XAVIER)
+                .updater(new Adam(rate))
+                .l2(rate * 0.005)
                 .list()
                 .layer(new DenseLayer.Builder()
                         .nIn(64 * 64 * 3)
-                        .nOut(1000)
-                        .activation(Activation.RELU)
-                        .weightInit(WeightInit.XAVIER)
+                        .nOut(500)
                         .build())
-                .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(1000)
-                        .nOut(10)
+                .layer(new DenseLayer.Builder()
+                        .nIn(500)
+                        .nOut(100)
+                        .build())
+                .layer(new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD)
                         .activation(Activation.SOFTMAX)
-                        .weightInit(WeightInit.XAVIER)
+                        .nIn(100)
+                        .nOut(10)
                         .build())
                 .build();
         return configuration;

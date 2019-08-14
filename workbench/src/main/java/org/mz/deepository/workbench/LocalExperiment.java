@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 import javax.inject.Provider;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -43,6 +44,12 @@ public class LocalExperiment implements Experiment {
 
     private NeuralNetwork network;
 
+    private Integer testLossFrequency;
+    private Integer statsFrequency;
+    private Integer checkpointFrequency;
+    private Integer performanceFrequency;
+    private Integer scoreFrequency;
+
     public LocalExperiment(String modelName, String version, Provider<MultiLayerConfiguration> configurationProvider,
             Provider<DataSetIterator> trainData, Provider<DataSetIterator> testData,
             String rootPath, ExperimentListener... listeners) {
@@ -53,7 +60,7 @@ public class LocalExperiment implements Experiment {
         this.testData = testData;
         this.rootPath = rootPath;
         this.listeners = ObjectUtils.firstNonNull(listeners, new ExperimentListener[0]);
-
+        this.setupListenerFrequencies(null, null, null, null, null);
         this.uiServer = UIServer.getInstance();
     }
 
@@ -78,6 +85,15 @@ public class LocalExperiment implements Experiment {
 
         this.network = network;
         return network;
+    }
+
+    public void setupListenerFrequencies(Integer scoreFrequency, Integer performanceFrequency, Integer checkpointFrequency,
+            Integer statsFrequency, Integer testLossFrequency) {
+        this.scoreFrequency = Optional.ofNullable(scoreFrequency).orElse(10);
+        this.performanceFrequency = Optional.ofNullable(performanceFrequency).orElse(100);
+        this.checkpointFrequency = Optional.ofNullable(checkpointFrequency).orElse(100);
+        this.statsFrequency = Optional.ofNullable(statsFrequency).orElse(10);
+        this.testLossFrequency = Optional.ofNullable(testLossFrequency).orElse(100);
     }
 
     void setupLogger() {
@@ -174,11 +190,15 @@ public class LocalExperiment implements Experiment {
         this.fileStats = new FileStatsStorage(stats.toFile());
         uiServer.attach(this.fileStats);
 
-        network.addListeners(new ScoreIterationListener(10), new PerformanceListener(100, false),
-                new CheckpointListener.Builder(modelsPath().toFile()).saveEveryNIterations(100).keepLastAndEvery(100, 10).deleteExisting(true).build(),
-                new StatsListener(this.fileStats, null, new DefaultStatsUpdateConfiguration.Builder().reportingFrequency(100).build(),
+        network.addListeners(
+                new ScoreIterationListener(this.scoreFrequency),
+                new PerformanceListener(this.performanceFrequency, false),
+                new CheckpointListener.Builder(modelsPath().toFile()).saveEveryNIterations(this.checkpointFrequency).keepLastAndEvery(100, 10).
+                        deleteExisting(true).build(),
+                new StatsListener(this.fileStats, null,
+                        new DefaultStatsUpdateConfiguration.Builder().reportingFrequency(this.statsFrequency).build(),
                         "Training", "master"),
-                new LossCalculatorListener(testData, 100)
+                new LossCalculatorListener(testData, this.testLossFrequency)
         );
         network.addListeners(listeners);
     }

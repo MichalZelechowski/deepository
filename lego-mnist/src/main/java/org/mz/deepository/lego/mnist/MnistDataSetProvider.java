@@ -22,11 +22,13 @@ public class MnistDataSetProvider implements Provider<DataSetIterator> {
     private final String path;
     private final Boolean flat;
     private final Integer batchSize;
+    private final Integer targetSize;
 
-    public MnistDataSetProvider(String path, Boolean flat, Integer batchSize) {
+    public MnistDataSetProvider(String path, Boolean flat, Integer batchSize, Integer targetSize) {
         this.path = path;
         this.flat = flat;
         this.batchSize = batchSize;
+        this.targetSize = targetSize;
     }
 
     @Override
@@ -34,10 +36,13 @@ public class MnistDataSetProvider implements Provider<DataSetIterator> {
         try {
             File dataFile = new File(this.path);
 
-            FileSplit dataSplit = new FileSplit(dataFile, NativeImageLoader.ALLOWED_FORMATS, GlobalRandom.getRandom());
+            FileSplit dataSplit = new FileSplit(
+                    dataFile,
+                    NativeImageLoader.ALLOWED_FORMATS,
+                    GlobalRandom.getRandom()
+            );
 
-            ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator();
-            ImageRecordReader recordReader = new ImageRecordReader(512, 512, 3, labelMaker);
+            ImageRecordReader recordReader = createImageReader();
 
             recordReader.initialize(dataSplit);
 
@@ -48,6 +53,14 @@ public class MnistDataSetProvider implements Provider<DataSetIterator> {
             return iterator;
         } catch (IOException exception) {
             throw Throwables.propagate(exception);
+        }
+    }
+
+    private ImageRecordReader createImageReader() {
+        if (this.targetSize != null) {
+            return new ImageRecordReader(this.targetSize, this.targetSize, 3, new ParentPathLabelGenerator());
+        } else {
+            return new ImageRecordReader(512, 512, 3, new ParentPathLabelGenerator());
         }
     }
 
